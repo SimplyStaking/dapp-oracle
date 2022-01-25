@@ -1,0 +1,12 @@
+#!/bin/bash
+
+thisdir=$(dirname -- "$BASH_SOURCES[0]")
+cd "$thisdir" || exit $?
+
+run_setup() {
+  source ./internal-scripts/add-funds.sh
+
+  add_funds "1" true
+}
+
+run_setup ${1+"$1"}
