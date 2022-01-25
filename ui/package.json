@@ -12,7 +12,7 @@
     "build": "parcel build public/index.html",
     "lint-check": "eslint '**/*.{js,jsx}'",
     "lint-fix": "eslint --fix '**/*.{js,jsx}'",
-    "start": "parcel serve --host=127.0.0.1 --port=3000 public/index.html"
+    "start": "parcel serve --host=0.0.0.0 --port=3000 public/index.html"
   },
   "browserslist": {
     "production": [
