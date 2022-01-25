@@ -51,7 +51,7 @@ services:
   ag-solo-node1:
     <<: *ag-solo-node-def
     ports:
-      - "127.0.0.1:6891:6891"
+      - "0.0.0.0:6891:6891"
     command: 'setup --webport=6891 --webhost=0.0.0.0 --netconfig=${AG_NETWORK_CONFIG}'
     environment:
       - "AG_SOLO_BASEDIR=chainlink"
@@ -73,6 +73,8 @@ services:
       - ./external_initiator1.env
   agoric-adapter1:
     <<: *agoric-adapter-def
+    ports:
+      - "0.0.0.0:8080:8080"
     depends_on:
       - ag-solo-node1
     environment:
@@ -180,3 +182,4 @@ secrets:
     file: ./secrets/password.txt
   apicredentials:
     file: ./secrets/apicredentials
+    
