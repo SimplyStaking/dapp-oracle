@@ -59,15 +59,15 @@ cd chainlink-agoric
 
 This setup script does the following:
 1. Starts docker containers via <b>chainlink-agoric/internal-scripts/common.sh</b> for:
-a) Postgres DB Instance
-b) Chainlink Node
-c) Agoric local solo node to interact with the chain started in Step 3
-d) Chainlink Agoric External Adapter
-e) Chainlink Agoric External Initiator
+    - Postgres DB Instance
+    - Chainlink Node
+    - Agoric local solo node to interact with the chain started in Step 3
+    - Chainlink Agoric External Adapter
+    - Chainlink Agoric External Initiator
 2. Creates an Oracle with a dApp via <b>chainlink-agoric/internal-scripts/add-dapp-oracle.sh</b> which does the following:
-a) Transferscoins to the ag-solo node
-b) Installs the dapp-oracle contract
-c) Adds the dapp-oracle to theAgoric nod
+    - Transferscoins to the ag-solo node
+    - Installs the dapp-oracle contract
+    - Adds the dapp-oracle to theAgoric nod
 3. Adds the external initiator to the Chainlin knode via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 4. Adds the external adapter to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 5. Adds a jobspec tot he Chainlink node via <b>chainlink-agoric/internal-scripts/add-jobspec.sh</b>
@@ -92,8 +92,8 @@ node show-jobs.js
 ## Step 6: Log in the Chainlink node
 
 1. Head to either:
-a) <b>http://localhost:6691</b> (If from the same VM)
-b) <b>http://<vm_ip>:6691</b> (If remotely)
+    - <b>http://localhost:6691</b> (If from the same VM)
+    - <b>http://<vm_ip>:6691</b> (If remotely)
 2. Login with
 ```
 Email: notreal@fakeemail.ch
@@ -124,8 +124,8 @@ yarn start
 ```
 
 Check the UI at either
-a) <b>http://localhost:3000?API_URL=http://<ag_solo_ip>:6891</b> (If from the same VM)
-b) <b>http://<vm_ip>:3000?API_URL=http://<ag_solo_ip>:6891</b> (If remotely)
+    - <b>http://localhost:3000?API_URL=http://<ag_solo_ip>:6891</b> (If from the same VM)
+    - <b>http://<vm_ip>:3000?API_URL=http://<ag_solo_ip>:6891</b> (If remotely)
 
 <img src="ui.png"></img>
 
