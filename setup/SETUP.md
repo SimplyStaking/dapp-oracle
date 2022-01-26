@@ -240,13 +240,10 @@ Finally, you should be able to view the result which should replace the text <b>
 1. Go to Jobs
 2. Click on the most recent job by looking at the created date
 <img src="9c.png"></img>
-<br>
 3. Confirm there are job runs
 <img src="9c2.png"></img>
-<br>
 4. You should also see the latest value being changed here
 <img src="9c3.png"></img>
-<br>
 
 ### Step 9D: Open the ag-solo node REPL
 
