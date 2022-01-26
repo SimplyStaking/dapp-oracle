@@ -100,14 +100,14 @@ Email: notreal@fakeemail.ch
 Password: twochains
 ```
 
-### Step 6A: Confirm that a job exists
+#### Step 6A: Confirm that a job exists
 
 a) Head to Jobs
 b) Make sure there is a job
 
 <img src="jobs.png"></img>
 
-### Step 6B: Confirm there is a bridge
+#### Step 6B: Confirm there is a bridge
 
 a) Head to Bridges
 b) Make sure there is a bridge
@@ -129,13 +129,13 @@ Check the UI at either
 
 <img src="ui.png"></img>
 
-## Step 7A: Change board
+#### Step 7A: Change board
 
 Change the board number to the board number obtained from Step 5
 
 <img src="board.png"></img>
 
-## Step 7B: Change jobId 
+#### Step 7B: Change jobId 
 
 Change jobId from the job ID obtained from Step 5
 
@@ -149,13 +149,13 @@ Let's assume we got back this output from Step 5
 board:596594455 jobId:"c1bcb1d2bdfd40a8b7387c69f594825a ?API_URL=http://localhost:6891 CL=http://localhost:6691
 ```
 
-### Step 8A: Fill in query details
+#### Step 8A: Fill in query details
 
 To run a job sepc, in the dApp UI we enter the aforementioned values as explained in Steps 7A and 7B and then hit <b>Query Oracle!</b> as can be seen in the image below
 
 <img src="createjob1.png"></img>
 
-### Step 8B: Wait for Query and Reply
+#### Step 8B: Wait for Query and Reply
 
 After pressing <b>Query Oracle!</b>, you should be able to see the result as waiting
 
@@ -169,7 +169,7 @@ Finally, you should be able to view the result which should replace the text <b>
 
 <img src="createjob4.png"></img>
 
-### Step 8C: Check Job Run on Chainlink Node
+#### Step 8C: Check Job Run on Chainlink Node
 
 1. Login like in Step 6 and head to Jobs
 2. Click on Jobs
@@ -180,7 +180,7 @@ Finally, you should be able to view the result which should replace the text <b>
 
 ## Step 9: Creating a Scheduled Job Run
 
-### Step 9A: Create a Push Notifier
+##### Step 9A: Create a Push Notifier
 
 1. Head to the Oracle dApp UI as in Step 7
 2. Click on <b>Create Push Query</b> as below
@@ -191,7 +191,7 @@ Finally, you should be able to view the result which should replace the text <b>
 
 <img src="9a2.png"></img>
 
-### Step 9B: Log in to the Chainlink Node and add a scheduled job
+#### Step 9B: Log in to the Chainlink Node and add a scheduled job
 
 1. Log in the Chainlink Node like Step 6
 2. Go to Jobs
@@ -235,7 +235,7 @@ Finally, you should be able to view the result which should replace the text <b>
 
 5. Click <b>Create Job</b>
 
-### Step 9C: Confirm Job Runs are running
+#### Step 9C: Confirm Job Runs are running
 
 1. Go to Jobs
 2. Click on the most recent job by looking at the created date
@@ -245,7 +245,7 @@ Finally, you should be able to view the result which should replace the text <b>
 4. You should also see the latest value being changed here
 <img src="9c3.png"></img>
 
-### Step 9D: Open the ag-solo node REPL
+#### Step 9D: Open the ag-solo node REPL
 
 1. Go to the VM where the docker containers are running, more specifically where the ag-solo node is running
 2. Run the following to open the UI to interact with the node
@@ -259,7 +259,7 @@ agoric open --repl --hostport=127.0.0.1:6891
 
 <img src="9d.png"></img>
 
-### Step 9E: Run this command to get the latest pushed price
+#### Step 9E: Run this command to get the latest pushed price
 
 Run this command to get the latest pushed price. You need to replace <b><board_id></b> with the notifier board ID from Step 9A.3
 
