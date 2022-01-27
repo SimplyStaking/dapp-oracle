@@ -72,6 +72,20 @@ This setup script does the following:
 4. Adds the external adapter to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 5. Adds a jobspec to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-jobspec.sh</b>
 
+#### Troubleshooting 
+
+If on running the script, you encounter such error:
+```
+Cannot find module '@agoric/zoe/exported'
+```
+
+Do the following:
+1. Remove yarn.lock in /dapp-oracle
+2. Run the following in /dapp-oracle
+```bash
+yarn install
+```
+
 ## Step 5: Record the output
 
 The setup script from the previous step returns an output of this format
