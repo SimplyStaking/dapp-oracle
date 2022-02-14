@@ -19,6 +19,7 @@ cd agoric-sdk
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
+cd packages/cosmic-swingset && make
 echo "export PATH=$PATH:$HOME/bin" >> ~/.profile
 source ~/.profile
 agoric --version
