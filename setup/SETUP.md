@@ -44,6 +44,7 @@ Before the setup, we have to start a local chain.
 
 ```bash
 #run this in the root directory of this project
+agoric install
 agoric start local-chain &> chain.log &
 ```
 
