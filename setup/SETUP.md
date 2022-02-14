@@ -132,6 +132,15 @@ b) Make sure there is a bridge
 
 ## Step 7: Start Oracle dApp UI
 
+Add this json property to the file <b>dapp-oracle/ui/public/conf/defaults.js</b>
+
+```bash
+#replace <board_id> from board number from step 5
+"INSTANCE_HANDLE_BOARD_ID": "<board_id>"
+```
+
+Then, do the following:
+
 ```bash
 #run this in the root directory of this project
 cd ui
