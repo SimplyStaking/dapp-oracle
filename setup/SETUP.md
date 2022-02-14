@@ -294,3 +294,51 @@ E(E(agoric.board).getValue("<board_id>")).getUpdateSince()
 In the image below, you can see the latest value being pushed
 
 <img src="9e.png"></img>
+
+## Step 10: Creating a Price Authority
+
+##### Step 10A: Spin up an additional local-solo node
+
+This will give permissions to the node to create a PriceAuthority
+
+Run the following command in the root directory of the project.
+
+```bash
+agoric start --reset local-solo 8001 agoric.priceAuthorityAdmin >& 8001.log &
+```
+
+##### Step 10B: Create a Price Authority
+
+Run the following command in the root directory of the project.
+
+<b>You have to replace the <board_id> with the board number of the push notifier from Step 9A</b>
+
+```bash
+NOTIFIER_BOARD_ID="<board_id>" \
+IN_ISSUER_JSON='"RUN"' OUT_ISSUER_JSON='"BLD"' \
+PRICE_DECIMALS=2 \
+agoric deploy --hostport=127.0.0.1:8001 api/priceAuthority/from-notifier.js
+```
+
+This should return a <b>PRICE_AUTHORITY_BOARD_ID</b> which is used in the next step as can be seen in the image below.
+
+<img src="10a.png"></img>
+
+##### Step 10C: Register Price Authority
+
+Run the following command in the root directory of the project.
+
+<b>You have to replace the <price_authority_board_id> with the returned PRICE_AUTHORITY_BOARD_ID from Step 10B</b>
+
+```bash
+PRICE_AUTHORITY_BOARD_ID="<price_authority_board_id>" \
+IN_ISSUER_JSON='"RUN"' OUT_ISSUER_JSON='"BLD"' \
+agoric deploy --hostport=127.0.0.1:8001 api/register.js
+```
+
+##### Step 10D: Query Price Pair
+
+Head to <b>http://<ip_addr>:6891</b> and confirm the output as below.
+
+
+<img src="10d.png"></img>
