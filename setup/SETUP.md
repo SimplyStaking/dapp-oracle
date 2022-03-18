@@ -16,6 +16,7 @@ node --version # 14.15.0 or higher
 npm install --global yarn
 git clone https://github.com/Agoric/agoric-sdk
 cd agoric-sdk
+git checkout mfig-cl-aggregator
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -56,6 +57,7 @@ The next step involves running the script found at <b>chainlink-agoric/setup</b>
 ```bash
 #run this in the root directory of this project
 cd chainlink-agoric
+docker-compose pull
 ./setup
 ```
 
