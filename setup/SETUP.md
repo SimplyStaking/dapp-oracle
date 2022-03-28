@@ -9,7 +9,7 @@ Make sure you have the following requirements before starting:
 2. docker
 3. docker-compose
 
-## Step 1: Installing Agoric CLI
+## Step 1: Installing Agoric CLI (use mfig-cl-aggregator branch)
 
 ``` bash
 node --version # 14.15.0 or higher
@@ -58,6 +58,7 @@ The next step involves running the script found at <b>chainlink-agoric/setup</b>
 #run this in the root directory of this project
 cd chainlink-agoric
 docker-compose pull
+#When it asks for more to start other oracles, choose Y (yes)
 ./setup
 ```
 
@@ -95,7 +96,9 @@ yarn install
 The setup script from the previous step returns an output of this format
 
 ```
-board:<board_num> jobId:"<job_id>" ?API_URL=http://localhost:6891 CL=http://localhost:6691
+board:<boardId_oracle1> jobId:<jobId_clNode1> ?API_URL=http://localhost:6891 CL=http://localhost:6691
+board:<boardId_oracle2> jobId:<jobId_clNode2> ?API_URL=http://localhost:6891 CL=http://localhost:6691
+board:<boardId_oracle3> jobId:<jobId_clNode3> ?API_URL=http://localhost:6891 CL=http://localhost:6691
 ```
 
 Store this somewhere but if it is lost, this can be obtained by running
@@ -173,7 +176,9 @@ Change jobId from the job ID obtained from Step 5
 Let's assume we got back this output from Step 5
 
 ```
-board:596594455 jobId:"c1bcb1d2bdfd40a8b7387c69f594825a ?API_URL=http://localhost:6891 CL=http://localhost:6691
+board:<boardId_oracle1> jobId:<jobId_clNode1> ?API_URL=http://localhost:6891 CL=http://localhost:6691
+board:<boardId_oracle2> jobId:<jobId_clNode2> ?API_URL=http://localhost:6891 CL=http://localhost:6691
+board:<boardId_oracle3> jobId:<jobId_clNode3> ?API_URL=http://localhost:6891 CL=http://localhost:6691
 ```
 
 #### Step 8A: Fill in query details
@@ -296,10 +301,162 @@ E(E(agoric.board).getValue("<board_id>")).getUpdateSince()
 In the image below, you can see the latest value being pushed
 
 <img src="9e.png"></img>
+  
+## Step 10: Aggregating prices
 
-## Step 10: Creating a Price Authority
 
-##### Step 10A: Spin up an additional local-solo node
+##### Step 10A: Clone and start the simple NodeJS echo server
+
+###### Step 10A1: Make sure Node and NPM are installed
+
+Run the following command.
+
+```bash
+node --version
+```
+
+###### Step 10A2: Clone and start
+Run the following command.
+
+```bash
+git clone https://github.com/jacquesvcritien/nodejs-echo-server.git
+cd nodejs-echo-server
+nohup node server.js
+```
+  
+##### Step 10B: Spin up an additional local-solo node
+
+This will give priceAuthorityAdmin permissions to the node
+
+Run the following command in the root directory of the project.
+
+```bash
+agoric start --reset local-solo 7999 agoric.priceAuthorityAdmin >& 7999.log &
+```
+  
+##### Step 10C: Create a price authority based on an aggregator
+
+Run the following command in the root directory of the project.
+
+```bash
+IN_ISSUER_JSON='"BLD"' OUT_ISSUER_JSON='"USD"' \
+agoric deploy api/aggregate.js --hostname=127.0.0.1:7999
+```
+
+##### Step 10D: We have to repeat this for all oracles 
+
+##### Step 10D1: Create Job in the respective chainlink node
+
+1. Change <b>\<N></b> and log into http://localhost:669\<N> with credentials from Step 6
+2. Create the following new job 
+```yaml
+{
+  "initiators": [
+    {
+      "type": "external",
+      "params": {
+        "name": "test-ei",
+        "body": {
+          "endpoint": "agoric-node"
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "type": "httpgetwithunrestrictednetworkaccess",
+      "confirmations": null,
+      "params": {
+      }
+    },
+    {
+      "type": "jsonparse",
+      "confirmations": null,
+      "params": {
+      }
+    },
+    {
+      "type": "multiply",
+      "confirmations": null,
+      "params": {
+      }
+    },
+    {
+      "type": "agoric",
+      "confirmations": null,
+      "params": {
+      }
+    }
+  ],
+  "startAt": null,
+  "endAt": null
+}
+```
+3. Take note of the job ID
+
+###### Step 10D2: Change job ID in api/flux-notifier.js
+
+You have to edit the <b>api/flux-notifier.js</b> file as follows and change
+1. \<jobID from step 10D1>
+2. \<VM_IP>
+3. \<VALUE> - This should be set to the value you want the job to return
+
+```js
+const PRICE_QUERY = {
+  jobId: '<jobID from step 10D1>',
+  params: {
+    get: 'http://<VM_IP>:3333?value=<VALUE>',
+    path: ['value'],
+    times: 1,
+  },
+};
+```
+
+###### Step 10D3: Create a Flux Notifier
+
+Run the following command in the root directory of the project.
+
+1. You have to change N to the number of the oracle, starting from 1.
+2. You have to change AGGREGATOR_INSTANCE_ID from the value returned in Step 10B
+
+```bash
+AGGREGATOR_INSTANCE_ID=<boardId of aggregator instance from step 10B> \
+FEE_ISSUER_JSON='"RUN"' \
+agoric deploy api/flux-notifier.js --hostname=127.0.0.1:689<N>
+```
+  
+###### Step 10D4: Create a Flux Notifier
+
+Run the following command in the root directory of the project.
+
+Add the oracle's notifier to the aggregator.
+
+1. You have to change NOTIFIER_BOARD_ID to the notifier board ID from Step 10C2
+2. You have to change INSTANCE_HANDLE_BOARD_ID to the oracle board ID from Step 8
+
+```bash
+NOTIFIER_BOARD_ID=<boardId of push notifier from Step 10C2> \
+INSTANCE_HANDLE_BOARD_ID=<boardId of oracle instance from Step 8> \
+IN_ISSUER_JSON='"BLD"' OUT_ISSUER_JSON='"USD"' \
+PRICE_DECIMALS=2 \
+agoric deploy api/aggregate.js --hostname=127.0.0.1:7999
+```
+
+##### Step 10E: Query Price Pair
+
+Head to <b>http://<ip_addr>:6891</b> and confirm the output by typing in the following commands.
+
+```js
+E(home.agoricNames).lookup('brand', 'BLD').then(brand => bld = brand)
+E(home.agoricNames).lookup('brand', 'USD').then(brand => usd = brand)
+pa = E(home.board).getValue('<boardId of price authority from Step 10B>')
+E(E(pa).makeQuoteNotifier({ value: 1_000n * 10n ** 6n, brand: bld }, usd)).getUpdateSince()
+```
+
+  
+## Step 11: Creating a Price Authority
+
+##### Step 11A: Spin up an additional local-solo node
 
 This will give permissions to the node to create a PriceAuthority
 
@@ -309,7 +466,7 @@ Run the following command in the root directory of the project.
 agoric start --reset local-solo 8001 agoric.priceAuthorityAdmin >& 8001.log &
 ```
 
-##### Step 10B: Create a Price Authority
+##### Step 11B: Create a Price Authority
 
 Run the following command in the root directory of the project.
 
@@ -326,7 +483,7 @@ This should return a <b>PRICE_AUTHORITY_BOARD_ID</b> which is used in the next s
 
 <img src="10a.png"></img>
 
-##### Step 10C: Register Price Authority
+##### Step 11C: Register Price Authority
 
 Run the following command in the root directory of the project.
 
@@ -338,7 +495,7 @@ IN_ISSUER_JSON='"RUN"' OUT_ISSUER_JSON='"BLD"' \
 agoric deploy --hostport=127.0.0.1:8001 api/register.js
 ```
 
-##### Step 10D: Query Price Pair
+##### Step 11D: Query Price Pair
 
 Head to <b>http://<ip_addr>:6891</b> and confirm the output as below.
 
