@@ -9,11 +9,12 @@ add_bridge() {
 
   login_cl "$CL_URL"
 
+  THIS_VM_IP=$(hostname -I | cut -d' ' -f1)
   payload=$(
     cat <<EOF
 {
   "name": "agoric",
-  "url": "http://chainlink-agoric_agoric-adapter$1_1:8080/"
+  "url": "http://$THIS_VM_IP:3000/adapter"
 }
 EOF
   )

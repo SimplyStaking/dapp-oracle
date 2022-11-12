@@ -74,7 +74,7 @@ start_docker() {
 
   containers=
   for i in ${1+"$@"}; do
-    containers="$containers chainlink-node$i agoric-adapter$i"
+    containers="$containers chainlink-node$i"
   done
   docker-compose up -d $containers
   

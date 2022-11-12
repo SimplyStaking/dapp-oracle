@@ -9,11 +9,13 @@ add_ei() {
 
   login_cl "$CL_URL"
 
+  THIS_VM_IP=$(hostname -I | cut -d' ' -f1)
+
   payload=$(
     cat <<EOF
 {
   "name": "test-ei",
-  "url": "http://chainlink-agoric_external-initiator-node$1_1:8080/jobs"
+  "url": "http://$THIS_VM_IP:3000/jobs"
 }
 EOF
   )
@@ -32,8 +34,19 @@ EOF
   EI_CI_ACCESSKEY=$(jq -r '.data.attributes.outgoingToken' <<<"$result")
   EI_CI_SECRET=$(jq -r '.data.attributes.outgoingSecret' <<<"$result")
 
-  run_ei "$1" "$EI_CI_ACCESSKEY" "$EI_CI_SECRET" "$EI_IC_ACCESSKEY" "$EI_IC_SECRET"
+  tee ei-credentials.json << EOF
+{
+    "EI_IC_ACCESSKEY": "$EI_IC_ACCESSKEY",
+    "EI_IC_SECRET": "$EI_IC_SECRET"
+}
+EOF
 
+  AGORIC_SDK=$(find ~ -type d -name "agoric-sdk" | head -n 1)
+
+  echo "Moving EI credentials to $AGORIC_SDK/packages/agoric-cl-middleware/src/credentials.json"
+  mv ei-credentials.json $AGORIC_SDK/packages/agoric-cl-middleware/src/credentials.json
+
+  echo "EI_IC_ACCESSKEY:$EI_IC_ACCESSKEY, EI_IC_SECRET:$EI_IC_SECRET"
   echo "EI has been added to Chainlink node"
   title "Done adding EI #$1"
 }
