@@ -43,8 +43,15 @@ EOF
 
   AGORIC_SDK=$(find ~ -type d -name "agoric-sdk" | head -n 1)
 
-  echo "Moving EI credentials to $AGORIC_SDK/packages/agoric-cl-middleware/src/credentials.json"
-  mv ei-credentials.json $AGORIC_SDK/packages/agoric-cl-middleware/src/credentials.json
+  CONFIG_DIR=~/config
+  CREDS_FILE=$CONFIG_DIR/ei_credentials.json
+
+  if [ ! -d $CONFIG_DIR ]; then
+        mkdir -p $CONFIG_DIR
+  fi
+
+  echo "Moving EI credentials to $CREDS_FILE"
+  mv ei-credentials.json $CREDS_FILE
 
   echo "EI_IC_ACCESSKEY:$EI_IC_ACCESSKEY, EI_IC_SECRET:$EI_IC_SECRET"
   echo "EI has been added to Chainlink node"
