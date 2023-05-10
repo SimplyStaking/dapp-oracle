@@ -1,5 +1,12 @@
 #!/bin/bash
 
+EMAIL=$1
+PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 15)
+PASSWORD=$(echo $PASSWORD | tr '[:lower:]' '[:upper:]' | sed -E 's/(.)/\1\n/g' | shuf | tr -d '\n')
+
+echo $EMAIL > secrets/apicredentials
+echo $PASSWORD >> secrets/apicredentials
+
 thisdir=$(dirname -- "$BASH_SOURCES[0]")
 cd "$thisdir" || exit $?
 
