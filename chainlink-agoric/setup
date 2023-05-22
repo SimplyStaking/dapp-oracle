@@ -6,6 +6,7 @@ PASSWORD=$(echo $PASSWORD | tr '[:lower:]' '[:upper:]' | sed -E 's/(.)/\1\n/g' |
 
 echo $EMAIL > secrets/apicredentials
 echo $PASSWORD >> secrets/apicredentials
+echo "CL Node password: $PASSWORD"
 
 thisdir=$(dirname -- "$BASH_SOURCES[0]")
 cd "$thisdir" || exit $?
